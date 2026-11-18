@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>重要日期小卡</title>
+<style>
+:root{--bg:#e9edf0;--card:#fafbfc;--ink:#1d2733;--mute:#7b8794;--line:#cfd7de;--accent:#3f6f86;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16191c;--card:#20252a;--ink:#e8edf1;--mute:#98a3ad;--line:#38414a;--accent:#8fb7cc}}
+:root[data-theme="dark"]{--bg:#16191c;--card:#20252a;--ink:#e8edf1;--mute:#98a3ad;--line:#38414a;--accent:#8fb7cc}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:"Noto Serif TC","Songti TC","PMingLiU",Georgia,serif;display:flex;flex-direction:column;overflow:hidden}
+#view{flex:1;min-height:0;overflow:hidden;touch-action:pan-y}
+#track{display:flex;height:100%;transition:transform .7s cubic-bezier(.65,0,.25,1)}
+.slide{flex:0 0 100%;display:flex;align-items:center;justify-content:center;padding:14px 0}
+.card{container-type:size;height:100%;max-height:560px;aspect-ratio:5/8;max-width:88vw;background:var(--card);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;padding:7cqw 8cqw 6cqw;box-sizing:border-box;text-align:center}
+.label{font-size:4.6cqw;color:var(--mute);letter-spacing:.2em;min-height:1.4em}
+.date{font-size:25cqw;font-weight:700;line-height:1.05;margin:3cqh 0 0;letter-spacing:-.01em;white-space:nowrap}
+.month{font-size:5.6cqw;margin:2cqh 0 0;padding-top:2cqh;border-top:2px solid var(--accent);color:var(--accent);letter-spacing:.3em}
+.art{flex:1;min-height:0;margin-top:3cqh;display:flex;align-items:center;justify-content:center}
+.art img,.art svg{max-width:100%;max-height:100%;object-fit:contain}
+.art svg{width:60%;color:var(--mute)}
+#bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:6px 12px 14px}
+button{font:inherit;color:var(--ink);background:none;border:1px solid var(--line);border-radius:999px;width:36px;height:36px;cursor:pointer;font-size:15px;line-height:1}
+button:hover{border-color:var(--accent)}
+button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+#dots{display:flex;gap:8px;padding:0 6px}
+#dots button{width:10px;height:10px;padding:0;border-radius:50%;background:var(--line);border:0}
+#dots button[aria-current="true"]{background:var(--accent)}
+@media (prefers-reduced-motion:reduce){#track{transition:none}}
+</style>
+</head>
+<body>
+<div id="view"><div id="track"></div></div>
+<div id="bar">
+  <button id="prev" aria-label="上一張">‹</button>
+  <div id="dots"></div>
+  <button id="next" aria-label="下一張">›</button>
+  <button id="play" aria-label="自動播放">▶</button>
+</div>
+<script>
+/* ===== 在這裡改內容 =====
+   date：大字日期  month：月份數字  en：英文月份  label：小標題
+   img：你的插圖（透明背景 PNG 的 data URI）；留空會顯示預設小圖 */
+var CARDS=[
+  {date:"04/08",month:"4",en:"April",label:"在一起紀念日",img:""},
+  {date:"11/06",month:"11",en:"November",label:"有生的生日",img:""},
+  {date:"12/25",month:"12",en:"December",label:"第一個聖誕節",img:""}
+];
+var INTERVAL=4500;
+/* ===== 以下不用改 ===== */
+var doodle='<svg viewBox="0 0 100 120" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M50 112V48"/><path d="M50 84c-16 0-24-10-24-22 14 0 24 8 24 22z"/><path d="M50 66c14 0 22-9 22-20-13 0-22 7-22 20z"/><circle cx="50" cy="34" r="12"/><circle cx="50" cy="34" r="3"/></svg>';
+var track=document.getElementById("track"),dots=document.getElementById("dots"),playBtn=document.getElementById("play");
+var idx=0,timer=null,playing=false;
+CARDS.forEach(function(c,i){
+  var s=document.createElement("div");s.className="slide";
+  var art=c.img?'<img alt="" src="'+c.img+'">':doodle;
+  s.innerHTML='<div class="card"><div class="label">'+c.label+'</div><div class="date">'+c.date+'</div><div class="month">'+c.month+'月　'+c.en+'</div><div class="art">'+art+'</div></div>';
+  track.appendChild(s);
+  var d=document.createElement("button");d.setAttribute("aria-label","第 "+(i+1)+" 張");d.onclick=function(){go(i);restart()};dots.appendChild(d);
+});
+function go(n){
+  idx=(n+CARDS.length)%CARDS.length;
+  track.style.transform="translateX("+(-idx*100)+"%)";
+  Array.prototype.forEach.call(dots.children,function(d,i){d.setAttribute("aria-current",i===idx?"true":"false")});
+}
+function stop(){clearInterval(timer);timer=null}
+function start(){stop();timer=setInterval(function(){go(idx+1)},INTERVAL)}
+function restart(){if(playing)start()}
+function setPlaying(on){playing=on;playBtn.textContent=on?"❚❚":"▶";playBtn.setAttribute("aria-label",on?"暫停":"自動播放");on?start():stop()}
+document.getElementById("prev").onclick=function(){go(idx-1);restart()};
+document.getElementById("next").onclick=function(){go(idx+1);restart()};
+playBtn.onclick=function(){setPlaying(!playing)};
+document.addEventListener("keydown",function(e){
+  if(e.key==="ArrowLeft"){go(idx-1);restart()}
+  if(e.key==="ArrowRight"){go(idx+1);restart()}
+});
+var sx=null,view=document.getElementById("view");
+view.addEventListener("pointerdown",function(e){sx=e.clientX});
+view.addEventListener("pointerup",function(e){
+  if(sx===null)return;var dx=e.clientX-sx;sx=null;
+  if(Math.abs(dx)>40){go(dx<0?idx+1:idx-1);restart()}
+});
+document.addEventListener("visibilitychange",function(){if(document.hidden)stop();else if(playing)start()});
+go(0);
+setPlaying(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+</script>
+</body>
+</html>
