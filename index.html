@@ -5,21 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>重要日期小卡</title>
 <style>
-:root{--bg:#e9edf0;--card:#fafbfc;--ink:#1d2733;--mute:#7b8794;--line:#cfd7de;--accent:#3f6f86;
+:root{--bg:#1b1b1b;--card:#252525;--ink:#ecebe8;--mute:#9b9892;--line:#3a3a3a;--accent:#d9826b;color-scheme:dark;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#16191c;--card:#20252a;--ink:#e8edf1;--mute:#98a3ad;--line:#38414a;--accent:#8fb7cc}}
-:root[data-theme="dark"]{--bg:#16191c;--card:#20252a;--ink:#e8edf1;--mute:#98a3ad;--line:#38414a;--accent:#8fb7cc}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 html,body{height:100%;margin:0}
 body{background:var(--bg);color:var(--ink);font-family:"Noto Serif TC","Songti TC","PMingLiU",Georgia,serif;display:flex;flex-direction:column;overflow:hidden}
 #view{flex:1;min-height:0;overflow:hidden;touch-action:pan-y}
 #track{display:flex;height:100%;transition:transform .7s cubic-bezier(.65,0,.25,1)}
 .slide{flex:0 0 100%;display:flex;align-items:center;justify-content:center;padding:14px 0}
-.card{container-type:size;height:100%;max-height:560px;aspect-ratio:5/8;max-width:88vw;background:var(--card);border:1px solid var(--line);border-radius:6px;display:flex;flex-direction:column;padding:7cqw 8cqw 6cqw;box-sizing:border-box;text-align:center}
+.card{container-type:size;height:100%;max-height:560px;aspect-ratio:5/8;max-width:88vw;background:var(--card);border:1px solid var(--line);border-radius:6px;overflow:hidden;display:flex;flex-direction:column;padding:7cqw 8cqw 6cqw;box-sizing:border-box;text-align:center}
 .label{font-size:4.6cqw;color:var(--mute);letter-spacing:.2em;min-height:1.4em}
 .date{font-size:25cqw;font-weight:700;line-height:1.05;margin:3cqh 0 0;letter-spacing:-.01em;white-space:nowrap}
 .month{font-size:5.6cqw;margin:2cqh 0 0;padding-top:2cqh;border-top:2px solid var(--accent);color:var(--accent);letter-spacing:.3em}
-.art{flex:1;min-height:0;margin-top:3cqh;display:flex;align-items:center;justify-content:center}
+.art{flex:1;min-height:0;margin:3cqh -8cqw -6cqw;display:flex;align-items:center;justify-content:center}
 .art img,.art svg{max-width:100%;max-height:100%;object-fit:contain}
 .art svg{width:60%;color:var(--mute)}
 #bar{display:flex;align-items:center;justify-content:center;gap:10px;padding:6px 12px 14px}
@@ -43,11 +41,12 @@ button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 <script>
 /* ===== 在這裡改內容 =====
    date：大字日期  month：月份數字  en：英文月份  label：小標題
-   img：你的插圖（透明背景 PNG 的 data URI）；留空會顯示預設小圖 */
+   img：插圖檔名（放在同一個資料夾）；留空會顯示預設小圖 */
 var CARDS=[
-  {date:"04/08",month:"4",en:"April",label:"在一起紀念日",img:""},
-  {date:"11/06",month:"11",en:"November",label:"有生的生日",img:""},
-  {date:"12/25",month:"12",en:"December",label:"第一個聖誕節",img:""}
+  {date:"04/08",month:"4",en:"April",label:"交往紀念日　燎原之火",img:"apr08.jpg"},
+  {date:"11/06",month:"11",en:"November",label:"有生的生日",img:"nov06.jpg"},
+  {date:"12/25",month:"12",en:"December",label:"業的生日",img:"dec25.jpg"},
+  {date:"04/01",month:"4",en:"April",label:"專屬你的玩笑",img:"apr01.jpg"}
 ];
 var INTERVAL=4500;
 /* ===== 以下不用改 ===== */
